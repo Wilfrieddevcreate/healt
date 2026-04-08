@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Dumbbell } from "lucide-react";
+import { Menu, X, Dumbbell, Bookmark } from "lucide-react";
+import { SearchDialog } from "./search-dialog";
+import { DarkModeToggle } from "./dark-mode-toggle";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -11,6 +13,7 @@ const navLinks = [
   { href: "/category/weight-loss", label: "Weight Loss" },
   { href: "/category/muscle-building", label: "Muscle Building" },
   { href: "/category/weight-gain", label: "Weight Gain" },
+  { href: "/tools", label: "Tools" },
 ];
 
 export function Navbar() {
@@ -27,8 +30,8 @@ export function Navbar() {
     <nav
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-border"
-          : "bg-white"
+          ? "bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm border-b border-border dark:border-gray-700"
+          : "bg-white dark:bg-gray-900"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,7 +40,7 @@ export function Navbar() {
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center group-hover:bg-primary-dark transition-colors">
               <Dumbbell className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-foreground tracking-tight">
+            <span className="text-xl font-bold text-foreground dark:text-white tracking-tight">
               Fit<span className="text-primary">Horizon</span>
             </span>
           </Link>
@@ -47,20 +50,31 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 text-sm font-medium text-muted hover:text-foreground hover:bg-surface rounded-lg transition-colors"
+                className="px-3 py-2 text-sm font-medium text-muted hover:text-foreground dark:hover:text-white hover:bg-surface dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-surface transition-colors"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          <div className="flex items-center gap-1">
+            <SearchDialog />
+            <Link
+              href="/bookmarks"
+              className="p-2 text-muted hover:text-foreground hover:bg-surface dark:hover:bg-gray-800 rounded-lg transition-colors"
+              aria-label="Bookmarks"
+            >
+              <Bookmark className="w-5 h-5" />
+            </Link>
+            <DarkModeToggle />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 rounded-lg hover:bg-surface dark:hover:bg-gray-800 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -70,7 +84,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border bg-white overflow-hidden"
+            className="md:hidden border-t border-border dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden"
           >
             <div className="px-4 py-3 space-y-1">
               {navLinks.map((link) => (
@@ -78,7 +92,7 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block px-4 py-2.5 text-sm font-medium text-muted hover:text-foreground hover:bg-surface rounded-lg transition-colors"
+                  className="block px-4 py-2.5 text-sm font-medium text-muted hover:text-foreground dark:hover:text-white hover:bg-surface dark:hover:bg-gray-800 rounded-lg transition-colors"
                 >
                   {link.label}
                 </Link>

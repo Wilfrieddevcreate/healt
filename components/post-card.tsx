@@ -21,7 +21,7 @@ interface PostCardProps {
 export function PostCard({ post, featured = false }: PostCardProps) {
   return (
     <article
-      className={`group bg-white rounded-2xl border border-border overflow-hidden hover:shadow-lg transition-all duration-300 ${
+      className={`group bg-white dark:bg-gray-900 rounded-2xl border border-border dark:border-gray-700 overflow-hidden hover:shadow-lg transition-all duration-300 ${
         featured ? "md:col-span-2 md:grid md:grid-cols-2" : ""
       }`}
     >
@@ -60,7 +60,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
 
           <Link href={`/blog/${post.slug}`} className="block">
             <h3
-              className={`font-bold text-foreground group-hover:text-primary transition-colors leading-snug mb-2 ${
+              className={`font-bold text-foreground dark:text-white group-hover:text-primary transition-colors leading-snug mb-2 ${
                 featured ? "text-xl sm:text-2xl" : "text-lg"
               }`}
             >

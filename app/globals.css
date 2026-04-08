@@ -22,6 +22,20 @@ body {
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
 }
 
+/* Dark mode */
+.dark body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.dark .prose {
+  --tw-prose-body: #94a3b8;
+  --tw-prose-headings: #f1f5f9;
+  --tw-prose-bold: #f1f5f9;
+  --tw-prose-bullets: #64748b;
+  --tw-prose-links: #22c55e;
+}
+
 .prose h2 {
   scroll-margin-top: 5rem;
 }

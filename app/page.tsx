@@ -35,10 +35,10 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+              <h2 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
                 Latest Articles
               </h2>
-              <p className="text-muted mt-2">
+              <p className="text-muted dark:text-gray-400 mt-2">
                 Evidence-based guides to help you reach your goals
               </p>
             </div>
@@ -72,13 +72,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-20 bg-surface">
+      <section className="py-16 sm:py-20 bg-surface dark:bg-gray-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white">
               Explore by Category
             </h2>
-            <p className="text-muted mt-2">
+            <p className="text-muted dark:text-gray-400 mt-2">
               Find the right content for your fitness journey
             </p>
           </div>
@@ -90,15 +90,15 @@ export default async function HomePage() {
                 <Link
                   key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="group p-6 bg-white rounded-2xl border border-border hover:shadow-lg hover:border-primary/30 transition-all duration-300 text-center"
+                  className="group p-6 bg-white dark:bg-gray-800 rounded-2xl border border-border dark:border-gray-700 hover:shadow-lg hover:border-primary/30 transition-all duration-300 text-center"
                 >
                   <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
                     <IconComponent className="w-7 h-7 text-primary" />
                   </div>
-                  <h3 className="font-bold text-foreground text-lg mb-1">
+                  <h3 className="font-bold text-foreground dark:text-white text-lg mb-1">
                     {cat.name}
                   </h3>
-                  <p className="text-sm text-muted mb-3 line-clamp-2">
+                  <p className="text-sm text-muted dark:text-gray-400 mb-3 line-clamp-2">
                     {cat.description}
                   </p>
                   <span className="text-xs font-medium text-primary">

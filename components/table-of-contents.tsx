@@ -28,8 +28,8 @@ export function TableOfContents({ content }: { content: string }) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="p-5 bg-surface rounded-xl border border-border">
-      <h4 className="flex items-center gap-2 font-semibold text-sm text-foreground mb-3">
+    <nav className="p-5 bg-surface dark:bg-gray-800 rounded-xl border border-border dark:border-gray-700">
+      <h4 className="flex items-center gap-2 font-semibold text-sm text-foreground dark:text-white mb-3">
         <List className="w-4 h-4" />
         Table of Contents
       </h4>
@@ -38,7 +38,7 @@ export function TableOfContents({ content }: { content: string }) {
           <li key={h.id}>
             <a
               href={`#${h.id}`}
-              className={`block text-xs text-muted hover:text-primary transition-colors leading-relaxed ${
+              className={`block text-xs text-muted dark:text-gray-400 hover:text-primary transition-colors leading-relaxed ${
                 h.level === 3 ? "pl-3" : ""
               }`}
             >

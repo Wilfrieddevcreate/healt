@@ -6,9 +6,9 @@ import { ArrowRight, TrendingUp, Target, Zap } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-surface to-white py-16 sm:py-24">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(22,163,74,0.06),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(13,148,136,0.04),transparent_50%)]" />
+    <section className="relative overflow-hidden bg-gradient-to-b from-surface to-white dark:from-gray-900 dark:to-[#0f172a] py-16 sm:py-24">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(22,163,74,0.08),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(13,148,136,0.06),transparent_50%)]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-3xl mx-auto">
@@ -22,14 +22,14 @@ export function Hero() {
               Science-backed fitness advice
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight leading-[1.1] mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground dark:text-white tracking-tight leading-[1.1] mb-6">
               Transform Your Body{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
                 With Science
               </span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-muted leading-relaxed mb-8 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted dark:text-gray-400 leading-relaxed mb-8 max-w-2xl mx-auto">
               Expert guides on weight loss, muscle building, and nutrition. Evidence-based
               strategies for lasting results — no fads, no gimmicks.
             </p>
@@ -50,7 +50,7 @@ export function Hero() {
             </Link>
             <Link
               href="/category/weight-loss"
-              className="w-full sm:w-auto px-6 py-3 bg-white text-foreground font-semibold rounded-xl border border-border hover:bg-surface transition-colors"
+              className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 text-foreground dark:text-white font-semibold rounded-xl border border-border dark:border-gray-700 hover:bg-surface dark:hover:bg-gray-700 transition-colors"
             >
               Start Your Journey
             </Link>
@@ -70,14 +70,14 @@ export function Hero() {
           ].map((item) => (
             <div
               key={item.label}
-              className="flex items-start gap-3 p-4 bg-white rounded-xl border border-border"
+              className="flex items-start gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl border border-border dark:border-gray-700"
             >
               <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
                 <item.icon className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm text-foreground">{item.label}</h3>
-                <p className="text-xs text-muted mt-0.5">{item.desc}</p>
+                <h3 className="font-semibold text-sm text-foreground dark:text-white">{item.label}</h3>
+                <p className="text-xs text-muted dark:text-gray-400 mt-0.5">{item.desc}</p>
               </div>
             </div>
           ))}

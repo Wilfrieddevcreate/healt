@@ -14,10 +14,10 @@ export default function NotFound() {
         className="text-center max-w-md"
       >
         <div className="text-8xl font-extrabold text-primary/20 mb-4">404</div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground dark:text-white mb-3">
           Page Not Found
         </h1>
-        <p className="text-muted mb-8 leading-relaxed">
+        <p className="text-muted dark:text-gray-400 mb-8 leading-relaxed">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
           Let&apos;s get you back on track.
         </p>
@@ -32,7 +32,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/blog"
-            className="w-full sm:w-auto px-5 py-2.5 bg-surface text-foreground font-semibold rounded-xl border border-border hover:bg-surface-alt transition-colors flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-5 py-2.5 bg-surface dark:bg-gray-800 text-foreground dark:text-white font-semibold rounded-xl border border-border dark:border-gray-700 hover:bg-surface-alt dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
           >
             <Search className="w-4 h-4" />
             Browse Articles

@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 export default function DisclaimerPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-      <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-8">Disclaimer</h1>
-      <div className="prose prose-lg prose-green max-w-none prose-headings:text-foreground prose-p:text-muted">
+      <h1 className="text-3xl sm:text-4xl font-bold text-foreground dark:text-white mb-8">Disclaimer</h1>
+      <div className="prose prose-lg prose-green max-w-none prose-headings:text-foreground prose-p:text-muted dark:prose-invert">
         <p><em>Last updated: April 8, 2026</em></p>
 
-        <div className="p-5 bg-amber-50 border border-amber-200 rounded-xl not-prose mb-8">
-          <p className="text-sm text-amber-800 font-medium">
+        <div className="p-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl not-prose mb-8">
+          <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
             The information provided on FitHorizon is for general informational and educational purposes only. It is not intended as, and should not be understood or construed as, medical advice, diagnosis, or treatment.
           </p>
         </div>

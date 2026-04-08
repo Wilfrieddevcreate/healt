@@ -89,23 +89,23 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         Back to dashboard
       </Link>
 
-      <h1 className="text-2xl font-bold text-foreground mb-8">Edit Post</h1>
+      <h1 className="text-2xl font-bold text-foreground dark:text-white mb-8">Edit Post</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-foreground mb-1.5">Title</label>
+            <label className="block text-sm font-medium text-foreground dark:text-white mb-1.5">Title</label>
             <input
               {...register("title", { required: true })}
-              className="w-full px-3.5 py-2.5 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="w-full px-3.5 py-2.5 border border-border dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-800 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Category</label>
+            <label className="block text-sm font-medium text-foreground dark:text-white mb-1.5">Category</label>
             <select
               {...register("categoryId", { required: true })}
-              className="w-full px-3.5 py-2.5 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="w-full px-3.5 py-2.5 border border-border dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-800 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             >
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -114,44 +114,44 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Featured Image URL</label>
+            <label className="block text-sm font-medium text-foreground dark:text-white mb-1.5">Featured Image URL</label>
             <input
               {...register("featuredImage")}
-              className="w-full px-3.5 py-2.5 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="w-full px-3.5 py-2.5 border border-border dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-800 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-foreground mb-1.5">Excerpt</label>
+            <label className="block text-sm font-medium text-foreground dark:text-white mb-1.5">Excerpt</label>
             <textarea
               {...register("excerpt", { required: true })}
               rows={2}
-              className="w-full px-3.5 py-2.5 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
+              className="w-full px-3.5 py-2.5 border border-border dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-800 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-none"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-foreground mb-1.5">Content (Markdown)</label>
+            <label className="block text-sm font-medium text-foreground dark:text-white mb-1.5">Content (Markdown)</label>
             <textarea
               {...register("content", { required: true })}
               rows={16}
-              className="w-full px-3.5 py-2.5 border border-border rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y"
+              className="w-full px-3.5 py-2.5 border border-border dark:border-gray-600 rounded-xl text-sm font-mono bg-white dark:bg-gray-800 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary resize-y"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">SEO Title</label>
+            <label className="block text-sm font-medium text-foreground dark:text-white mb-1.5">SEO Title</label>
             <input
               {...register("metaTitle")}
-              className="w-full px-3.5 py-2.5 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="w-full px-3.5 py-2.5 border border-border dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-800 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Meta Description</label>
+            <label className="block text-sm font-medium text-foreground dark:text-white mb-1.5">Meta Description</label>
             <input
               {...register("metaDescription")}
-              className="w-full px-3.5 py-2.5 border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+              className="w-full px-3.5 py-2.5 border border-border dark:border-gray-600 rounded-xl text-sm bg-white dark:bg-gray-800 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
             />
           </div>
         </div>
@@ -159,11 +159,11 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         <div className="flex items-center gap-6 pt-2">
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" {...register("published")} className="rounded border-border" />
-            <span className="font-medium text-foreground">Published</span>
+            <span className="font-medium text-foreground dark:text-white">Published</span>
           </label>
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" {...register("featured")} className="rounded border-border" />
-            <span className="font-medium text-foreground">Featured</span>
+            <span className="font-medium text-foreground dark:text-white">Featured</span>
           </label>
         </div>
 

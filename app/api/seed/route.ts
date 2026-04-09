@@ -2,9 +2,24 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-export async function GET() {
+export async function GET(request: Request) {
+  // In production, require ?token=... that matches the SEED_TOKEN env var.
+  // In dev, the endpoint is open for convenience.
   if (process.env.NODE_ENV === "production") {
-    return NextResponse.json({ error: "Not allowed in production" }, { status: 403 });
+    const token = new URL(request.url).searchParams.get("token");
+    const expected = process.env.SEED_TOKEN;
+    if (!expected || token !== expected) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  }
+
+  // Don't re-seed if posts already exist — prevents accidental data clobbering.
+  const existingPosts = await prisma.post.count();
+  if (existingPosts > 0) {
+    return NextResponse.json({
+      success: true,
+      message: `Database already seeded (${existingPosts} posts). Skipping.`,
+    });
   }
 
   const password = await bcrypt.hash("admin123", 12);

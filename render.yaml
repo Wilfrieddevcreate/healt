@@ -1,0 +1,50 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Deploy with: https://dashboard.render.com/blueprints (link your repo)
+
+services:
+  - type: web
+    name: fithorizon
+    runtime: docker
+    plan: starter # $7/month, always-on (required for SEO — free plan spins down)
+    region: frankfurt # change to oregon/ohio for US
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+
+    # Persistent disk for the SQLite database.
+    # Without this, the DB would be wiped on every deploy.
+    disk:
+      name: fithorizon-data
+      mountPath: /app/data
+      sizeGB: 1
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # DB lives on the persistent disk so it survives deploys
+      - key: DATABASE_URL
+        value: file:/app/data/prod.db
+
+      # Generate a secure random JWT secret on first deploy
+      - key: JWT_SECRET
+        generateValue: true
+
+      # Secret token required to hit /api/seed in production
+      - key: SEED_TOKEN
+        generateValue: true
+
+      # The public site URL Render will assign; update if you add a custom domain
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://fithorizon.onrender.com
+
+      # Set these manually in the Render dashboard (they won't be synced from the file)
+      - key: GROQ_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_GOOGLE_VERIFICATION
+        sync: false
+      - key: NEXT_PUBLIC_BING_VERIFICATION
+        sync: false
+      - key: NEXT_PUBLIC_ADSENSE_ID
+        sync: false

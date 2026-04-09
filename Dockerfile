@@ -34,20 +34,32 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Next.js standalone server + static assets
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Prisma schema + migrations (applied at container startup against a persistent volume)
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/app/generated ./app/generated
+
+# Prisma client runtime + libsql driver (required by our adapter)
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@libsql ./node_modules/@libsql
+
+# Lightweight migration runner + startup script.
+# We don't ship the Prisma CLI (heavy transitive deps that standalone strips);
+# instead we apply SQL migrations directly via @libsql/client which is
+# already part of the standalone output.
+COPY --chown=nextjs:nodejs scripts ./scripts
+RUN chmod +x ./scripts/start.sh
 
 USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-# Production DB — override with a volume mount at runtime
+# Default DB path — on Render this is overridden to /app/data/prod.db by the env var
 ENV DATABASE_URL="file:/app/prisma/prod.db"
 
-CMD ["node", "server.js"]
+CMD ["./scripts/start.sh"]

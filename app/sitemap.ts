@@ -1,43 +1,94 @@
 import { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
+import { SITE_CONFIG } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fithorizon.com";
+  const baseUrl = SITE_CONFIG.url;
 
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    select: { slug: true, updatedAt: true },
-  });
+  const [posts, categories] = await Promise.all([
+    prisma.post.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true, featuredImage: true, title: true },
+      orderBy: { updatedAt: "desc" },
+    }),
+    prisma.category.findMany({
+      select: { slug: true, updatedAt: true },
+    }),
+  ]);
 
-  const categories = await prisma.category.findMany({
-    select: { slug: true, updatedAt: true },
-  });
+  const now = new Date();
 
-  const staticPages = [
-    { url: baseUrl, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },
-    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
-    { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
-    { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
-    { url: `${baseUrl}/disclaimer`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
-    { url: `${baseUrl}/tools`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
-    { url: `${baseUrl}/tools/bmi-calculator`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
-    { url: `${baseUrl}/tools/tdee-calculator`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
-    { url: `${baseUrl}/tools/macro-calculator`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
+  const staticPages: MetadataRoute.Sitemap = [
+    {
+      url: baseUrl,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools/bmi-calculator`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/tdee-calculator`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/macro-calculator`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/disclaimer`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
   ];
 
-  const postPages = posts.map((post) => ({
+  const postPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: post.updatedAt,
-    changeFrequency: "weekly" as const,
+    changeFrequency: "weekly",
+    priority: 0.9,
+    images: post.featuredImage ? [post.featuredImage] : undefined,
+  }));
+
+  const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({
+    url: `${baseUrl}/category/${cat.slug}`,
+    lastModified: cat.updatedAt,
+    changeFrequency: "daily",
     priority: 0.8,
   }));
 
-  const categoryPages = categories.map((cat) => ({
-    url: `${baseUrl}/category/${cat.slug}`,
-    lastModified: cat.updatedAt,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
-
-  return [...staticPages, ...postPages, ...categoryPages];
+  return [...staticPages, ...categoryPages, ...postPages];
 }

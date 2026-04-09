@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { PostCard } from "@/components/post-card";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { Pagination } from "@/components/pagination";
+import { absoluteUrl, jsonLdString } from "@/lib/seo";
 import type { Metadata } from "next";
 
 const POSTS_PER_PAGE = 9;
@@ -9,6 +10,13 @@ const POSTS_PER_PAGE = 9;
 export const metadata: Metadata = {
   title: "Blog — Fitness, Weight Loss & Muscle Building Articles",
   description: "Browse our collection of science-backed fitness articles covering weight loss, muscle building, nutrition, and healthy weight gain strategies.",
+  alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Blog — Fitness, Weight Loss & Muscle Building Articles",
+    description: "Browse our collection of science-backed fitness articles.",
+    url: absoluteUrl("/blog"),
+    type: "website",
+  },
 };
 
 interface BlogPageProps {
@@ -32,8 +40,29 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${absoluteUrl("/blog")}#collection`,
+    url: absoluteUrl("/blog"),
+    name: "FitHorizon Blog",
+    description: "Science-backed fitness and nutrition articles.",
+    isPartOf: { "@id": `${absoluteUrl("/")}#website` },
+    hasPart: posts.map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.title,
+      url: absoluteUrl(`/blog/${p.slug}`),
+      datePublished: p.createdAt.toISOString(),
+      author: { "@type": "Person", name: p.author.name },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(collectionJsonLd) }}
+      />
       <section className="py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">

@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Calculator, Flame, Target } from "lucide-react";
+import { absoluteUrl, jsonLdString } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Free Fitness Calculators — BMI, TDEE & Macro Calculator",
   description: "Use our free fitness calculators to find your BMI, daily calorie needs (TDEE), and optimal macronutrient split for your goals.",
+  keywords: ["BMI calculator", "TDEE calculator", "macro calculator", "fitness calculator", "calorie calculator", "body mass index"],
+  alternates: { canonical: "/tools" },
+  openGraph: {
+    title: "Free Fitness Calculators — BMI, TDEE & Macros",
+    description: "Science-based calculators for your fitness journey.",
+    url: absoluteUrl("/tools"),
+    type: "website",
+  },
 };
 
 const tools = [
@@ -28,9 +37,49 @@ const tools = [
   },
 ];
 
+const itemListJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Free Fitness Calculators",
+  description: "Collection of science-based fitness calculators",
+  itemListElement: [
+    {
+      "@type": "SoftwareApplication",
+      position: 1,
+      name: "BMI Calculator",
+      applicationCategory: "HealthApplication",
+      operatingSystem: "Any",
+      url: absoluteUrl("/tools/bmi-calculator"),
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+    {
+      "@type": "SoftwareApplication",
+      position: 2,
+      name: "TDEE Calculator",
+      applicationCategory: "HealthApplication",
+      operatingSystem: "Any",
+      url: absoluteUrl("/tools/tdee-calculator"),
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+    {
+      "@type": "SoftwareApplication",
+      position: 3,
+      name: "Macro Calculator",
+      applicationCategory: "HealthApplication",
+      operatingSystem: "Any",
+      url: absoluteUrl("/tools/macro-calculator"),
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+  ],
+};
+
 export default function ToolsPage() {
   return (
     <section className="py-12 sm:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(itemListJsonLd) }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground dark:text-white">

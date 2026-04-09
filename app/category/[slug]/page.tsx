@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { PostCard } from "@/components/post-card";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { Pagination } from "@/components/pagination";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { absoluteUrl, jsonLdString, breadcrumbSchema } from "@/lib/seo";
 import type { Metadata } from "next";
 
 const POSTS_PER_PAGE = 9;
@@ -12,13 +14,42 @@ interface CategoryPageProps {
   searchParams: Promise<{ page?: string }>;
 }
 
+export async function generateStaticParams() {
+  const categories = await prisma.category.findMany({ select: { slug: true } });
+  return categories.map((c) => ({ slug: c.slug }));
+}
+
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
   const category = await prisma.category.findUnique({ where: { slug } });
-  if (!category) return {};
+  if (!category) return { title: "Category not found" };
+
+  const title = `${category.name} Articles — Expert Guides & Tips`;
+  const description = category.description || `Browse our ${category.name} articles for expert, science-backed fitness advice.`;
+  const canonical = `/category/${category.slug}`;
+
   return {
-    title: `${category.name} Articles — Expert Guides & Tips`,
-    description: category.description || `Browse our ${category.name} articles for expert fitness advice.`,
+    title,
+    description,
+    keywords: [
+      category.name.toLowerCase(),
+      `${category.name.toLowerCase()} guide`,
+      `${category.name.toLowerCase()} tips`,
+      "fitness",
+      "nutrition",
+    ],
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: absoluteUrl(canonical),
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
@@ -43,10 +74,56 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${absoluteUrl(`/category/${category.slug}`)}#collection`,
+    url: absoluteUrl(`/category/${category.slug}`),
+    name: `${category.name} Articles`,
+    description: category.description || `${category.name} articles`,
+    isPartOf: { "@id": `${absoluteUrl("/")}#website` },
+    about: {
+      "@type": "Thing",
+      name: category.name,
+    },
+    hasPart: posts.map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.title,
+      url: absoluteUrl(`/blog/${p.slug}`),
+      datePublished: p.createdAt.toISOString(),
+      dateModified: p.updatedAt.toISOString(),
+      author: { "@type": "Person", name: p.author.name },
+      image: p.featuredImage || undefined,
+    })),
+  };
+
+  const breadcrumbJsonLd = breadcrumbSchema([
+    { label: "Home", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: category.name, href: `/category/${category.slug}` },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbJsonLd) }}
+      />
+
       <section className="py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Breadcrumbs
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Blog", href: "/blog" },
+              { label: category.name },
+            ]}
+          />
+
           <div className="mb-10">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full mb-3">
               {totalCount} article{totalCount !== 1 ? "s" : ""}

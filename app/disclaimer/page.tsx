@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Disclaimer",
   description: "FitHorizon health and fitness disclaimer. Important information about the content on our website.",
+  alternates: { canonical: "/disclaimer" },
+  robots: { index: true, follow: true },
 };
 
 export default function DisclaimerPage() {

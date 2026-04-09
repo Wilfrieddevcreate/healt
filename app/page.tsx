@@ -4,6 +4,12 @@ import { PostCard } from "@/components/post-card";
 import { NewsletterForm } from "@/components/newsletter-form";
 import Link from "next/link";
 import { ArrowRight, Flame, TrendingUp, Dumbbell } from "lucide-react";
+import { absoluteUrl, jsonLdString } from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   "weight-loss": Flame,
@@ -27,8 +33,23 @@ export default async function HomePage() {
   const featured = allPosts.filter((p) => p.featured).slice(0, 1);
   const rest = allPosts.filter((p) => !featured.includes(p)).slice(0, 4);
 
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: allPosts.slice(0, 10).map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: absoluteUrl(`/blog/${p.slug}`),
+      name: p.title,
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(itemListJsonLd) }}
+      />
       <Hero />
 
       <section className="py-16 sm:py-20">

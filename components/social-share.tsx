@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Share2, Check, Link as LinkIcon } from "lucide-react";
 
 interface SocialShareProps {
@@ -11,7 +11,11 @@ interface SocialShareProps {
 
 export function SocialShare({ url, title, description }: SocialShareProps) {
   const [copied, setCopied] = useState(false);
-  const fullUrl = typeof window !== "undefined" ? window.location.origin + url : url;
+  const [fullUrl, setFullUrl] = useState(url);
+
+  useEffect(() => {
+    setFullUrl(window.location.origin + url);
+  }, [url]);
 
   const copyLink = async () => {
     await navigator.clipboard.writeText(fullUrl);

@@ -2,19 +2,27 @@ import { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { SITE_CONFIG } from "@/lib/seo";
 
+async function loadSitemapData() {
+  try {
+    const [posts, categories] = await Promise.all([
+      prisma.post.findMany({
+        where: { published: true },
+        select: { slug: true, updatedAt: true, featuredImage: true, title: true },
+        orderBy: { updatedAt: "desc" },
+      }),
+      prisma.category.findMany({
+        select: { slug: true, updatedAt: true },
+      }),
+    ]);
+    return { posts, categories };
+  } catch {
+    return { posts: [], categories: [] };
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = SITE_CONFIG.url;
-
-  const [posts, categories] = await Promise.all([
-    prisma.post.findMany({
-      where: { published: true },
-      select: { slug: true, updatedAt: true, featuredImage: true, title: true },
-      orderBy: { updatedAt: "desc" },
-    }),
-    prisma.category.findMany({
-      select: { slug: true, updatedAt: true },
-    }),
-  ]);
+  const { posts, categories } = await loadSitemapData();
 
   const now = new Date();
 

@@ -22,24 +22,38 @@ interface BlogPostPageProps {
 }
 
 /**
- * Pre-render all published post pages at build time for maximum SEO performance
+ * Pre-render all published post pages at build time for maximum SEO performance.
+ * Gracefully returns an empty array if the database is unreachable or empty
+ * (e.g. during a Docker build with no data), letting ISR populate pages at runtime.
  */
 export async function generateStaticParams() {
-  const posts = await prisma.post.findMany({
-    where: { published: true },
-    select: { slug: true },
-  });
-  return posts.map((post) => ({ slug: post.slug }));
+  try {
+    const posts = await prisma.post.findMany({
+      where: { published: true },
+      select: { slug: true },
+    });
+    return posts.map((post) => ({ slug: post.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export const revalidate = 3600; // ISR: revalidate every hour
 
+async function findPostForMeta(slug: string) {
+  try {
+    return await prisma.post.findUnique({
+      where: { slug },
+      include: { category: true, author: true },
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await prisma.post.findUnique({
-    where: { slug },
-    include: { category: true, author: true },
-  });
+  const post = await findPostForMeta(slug);
   if (!post) return { title: "Article not found" };
 
   const canonical = `/blog/${post.slug}`;
@@ -97,29 +111,44 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
+async function loadPost(slug: string) {
+  try {
+    return await prisma.post.findUnique({
+      where: { slug, published: true },
+      include: {
+        category: true,
+        author: true,
+        ratings: { select: { value: true } },
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+
+async function loadRelated(postId: string, categoryId: string) {
+  try {
+    return await prisma.post.findMany({
+      where: { published: true, categoryId, id: { not: postId } },
+      include: { category: true },
+      take: 3,
+      orderBy: { createdAt: "desc" },
+    });
+  } catch {
+    return [];
+  }
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
 
-  const post = await prisma.post.findUnique({
-    where: { slug, published: true },
-    include: {
-      category: true,
-      author: true,
-      ratings: { select: { value: true } },
-    },
-  });
-
+  const post = await loadPost(slug);
   if (!post) notFound();
 
   // Increment views (fire and forget)
   prisma.post.update({ where: { id: post.id }, data: { views: { increment: 1 } } }).catch(() => {});
 
-  const relatedPosts = await prisma.post.findMany({
-    where: { published: true, categoryId: post.categoryId, id: { not: post.id } },
-    include: { category: true },
-    take: 3,
-    orderBy: { createdAt: "desc" },
-  });
+  const relatedPosts = await loadRelated(post.id, post.categoryId);
 
   const wordCount = countWords(post.content);
   const helpfulRatings = post.ratings.filter((r) => r.value === 1).length;

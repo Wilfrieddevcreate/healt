@@ -17,18 +17,30 @@ const categoryIcons: Record<string, React.ComponentType<{ className?: string }>>
   "muscle-building": Dumbbell,
 };
 
+// ISR: revalidate every hour so the homepage stays fresh but can build without a populated DB
+export const revalidate = 3600;
+
+async function loadHomeData() {
+  try {
+    const [allPosts, categories] = await Promise.all([
+      prisma.post.findMany({
+        where: { published: true },
+        include: { category: true, author: true },
+        orderBy: { createdAt: "desc" },
+        take: 6,
+      }),
+      prisma.category.findMany({
+        include: { _count: { select: { posts: { where: { published: true } } } } },
+      }),
+    ]);
+    return { allPosts, categories };
+  } catch {
+    return { allPosts: [], categories: [] };
+  }
+}
+
 export default async function HomePage() {
-  const [allPosts, categories] = await Promise.all([
-    prisma.post.findMany({
-      where: { published: true },
-      include: { category: true, author: true },
-      orderBy: { createdAt: "desc" },
-      take: 6,
-    }),
-    prisma.category.findMany({
-      include: { _count: { select: { posts: { where: { published: true } } } } },
-    }),
-  ]);
+  const { allPosts, categories } = await loadHomeData();
 
   const featured = allPosts.filter((p) => p.featured).slice(0, 1);
   const rest = allPosts.filter((p) => !featured.includes(p)).slice(0, 4);

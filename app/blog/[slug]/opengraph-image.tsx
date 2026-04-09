@@ -7,10 +7,13 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function PostOGImage({ params }: { params: { slug: string } }) {
-  const post = await prisma.post.findUnique({
-    where: { slug: params.slug },
-    include: { category: true },
-  });
+  let post: { title: string; category: { name: string } } | null = null;
+  try {
+    post = await prisma.post.findUnique({
+      where: { slug: params.slug },
+      include: { category: true },
+    });
+  } catch { /* DB unavailable */ }
 
   const title = post?.title || "FitHorizon";
   const category = post?.category.name || "Fitness";

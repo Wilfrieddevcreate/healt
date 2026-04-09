@@ -19,24 +19,34 @@ export const metadata: Metadata = {
   },
 };
 
+export const revalidate = 1800;
+
 interface BlogPageProps {
   searchParams: Promise<{ page?: string }>;
+}
+
+async function loadPosts(currentPage: number) {
+  try {
+    const [posts, totalCount] = await Promise.all([
+      prisma.post.findMany({
+        where: { published: true },
+        include: { category: true, author: true },
+        orderBy: { createdAt: "desc" },
+        skip: (currentPage - 1) * POSTS_PER_PAGE,
+        take: POSTS_PER_PAGE,
+      }),
+      prisma.post.count({ where: { published: true } }),
+    ]);
+    return { posts, totalCount };
+  } catch {
+    return { posts: [], totalCount: 0 };
+  }
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const { page } = await searchParams;
   const currentPage = Math.max(1, parseInt(page || "1"));
-
-  const [posts, totalCount] = await Promise.all([
-    prisma.post.findMany({
-      where: { published: true },
-      include: { category: true, author: true },
-      orderBy: { createdAt: "desc" },
-      skip: (currentPage - 1) * POSTS_PER_PAGE,
-      take: POSTS_PER_PAGE,
-    }),
-    prisma.post.count({ where: { published: true } }),
-  ]);
+  const { posts, totalCount } = await loadPosts(currentPage);
 
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 

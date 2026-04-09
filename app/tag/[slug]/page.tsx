@@ -7,37 +7,47 @@ interface TagPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 1800;
+
+async function loadTag(slug: string) {
+  try {
+    return await prisma.tag.findUnique({
+      where: { slug },
+      include: {
+        posts: {
+          include: {
+            post: {
+              include: { category: true, author: true },
+            },
+          },
+        },
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const tag = await prisma.tag.findUnique({ where: { slug } });
-  if (!tag) return {};
+  let tag: { name: string } | null = null;
+  try {
+    tag = await prisma.tag.findUnique({ where: { slug }, select: { name: true } });
+  } catch { /* DB unavailable */ }
+  if (!tag) return { title: "Tag not found" };
   return {
     title: `Articles tagged "${tag.name}"`,
     description: `Browse all fitness articles tagged with "${tag.name}" on FitHorizon.`,
+    alternates: { canonical: `/tag/${slug}` },
   };
 }
 
 export default async function TagPage({ params }: TagPageProps) {
   const { slug } = await params;
-
-  const tag = await prisma.tag.findUnique({
-    where: { slug },
-    include: {
-      posts: {
-        include: {
-          post: {
-            include: { category: true, author: true },
-          },
-        },
-      },
-    },
-  });
-
+  const tag = await loadTag(slug);
   if (!tag) notFound();
 
-  const posts = tag.posts
-    .map((pt) => pt.post)
-    .filter((p) => p.published);
+  const posts = tag.posts.map((pt) => pt.post).filter((p) => p.published);
 
   return (
     <section className="py-12 sm:py-16">

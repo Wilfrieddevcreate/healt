@@ -109,11 +109,11 @@ export default function TDEECalculatorPage() {
                 </div>
                 <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl">
                   <p className="text-xs text-muted mb-0.5">Fat Loss</p>
-                  <p className="text-lg font-bold text-red-600">{result.cut}</p>
+                  <p className="text-lg font-bold text-red-600 dark:text-red-400">{result.cut}</p>
                 </div>
                 <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
                   <p className="text-xs text-muted mb-0.5">Bulking</p>
-                  <p className="text-lg font-bold text-green-600">{result.bulk}</p>
+                  <p className="text-lg font-bold text-green-600 dark:text-green-400">{result.bulk}</p>
                 </div>
               </div>
             </div>

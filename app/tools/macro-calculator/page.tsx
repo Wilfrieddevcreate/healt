@@ -75,17 +75,17 @@ export default function MacroCalculatorPage() {
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
                 <p className="text-xs text-muted mb-1">Protein</p>
-                <p className="text-2xl font-bold text-blue-600">{result.protein}g</p>
+                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{result.protein}g</p>
                 <p className="text-xs text-muted">{result.protein * 4} cal</p>
               </div>
               <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
                 <p className="text-xs text-muted mb-1">Carbs</p>
-                <p className="text-2xl font-bold text-amber-600">{result.carbs}g</p>
+                <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{result.carbs}g</p>
                 <p className="text-xs text-muted">{result.carbs * 4} cal</p>
               </div>
               <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
                 <p className="text-xs text-muted mb-1">Fat</p>
-                <p className="text-2xl font-bold text-purple-600">{result.fat}g</p>
+                <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{result.fat}g</p>
                 <p className="text-xs text-muted">{result.fat * 9} cal</p>
               </div>
             </div>

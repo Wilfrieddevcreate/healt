@@ -26,10 +26,10 @@ export default function BMICalculatorPage() {
     }
 
     let category: string, color: string;
-    if (bmi < 18.5) { category = "Underweight"; color = "text-blue-600"; }
-    else if (bmi < 25) { category = "Normal weight"; color = "text-green-600"; }
-    else if (bmi < 30) { category = "Overweight"; color = "text-amber-600"; }
-    else { category = "Obese"; color = "text-red-600"; }
+    if (bmi < 18.5) { category = "Underweight"; color = "text-blue-600 dark:text-blue-400"; }
+    else if (bmi < 25) { category = "Normal weight"; color = "text-green-600 dark:text-green-400"; }
+    else if (bmi < 30) { category = "Overweight"; color = "text-amber-600 dark:text-amber-400"; }
+    else { category = "Obese"; color = "text-red-600 dark:text-red-400"; }
 
     setResult({ bmi: Math.round(bmi * 10) / 10, category, color });
   };

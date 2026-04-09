@@ -16,39 +16,96 @@
   --font-sans: var(--font-jakarta);
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
 }
 
-/* Dark mode */
-.dark body {
-  background: #0f172a;
-  color: #e2e8f0;
+/* Dark mode — override CSS variables so all utilities that reference them adapt automatically */
+.dark {
+  --color-background: #030712;
+  --color-foreground: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-muted-light: #64748b;
+  --color-surface: #111827;
+  --color-surface-alt: #1f2937;
+  --color-border: #1f2937;
 }
 
+.dark body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Prose dark mode */
 .dark .prose {
   --tw-prose-body: #cbd5e1;
   --tw-prose-headings: #f1f5f9;
-  --tw-prose-bold: #f1f5f9;
-  --tw-prose-bullets: #94a3b8;
+  --tw-prose-lead: #94a3b8;
   --tw-prose-links: #22c55e;
+  --tw-prose-bold: #f1f5f9;
   --tw-prose-counters: #94a3b8;
+  --tw-prose-bullets: #64748b;
   --tw-prose-hr: #334155;
-  --tw-prose-th-borders: #334155;
-  --tw-prose-td-borders: #1e293b;
-  --tw-prose-code: #e2e8f0;
-  --tw-prose-pre-bg: #1e293b;
-  --tw-prose-pre-code: #e2e8f0;
+  --tw-prose-quotes: #e2e8f0;
   --tw-prose-quote-borders: #334155;
   --tw-prose-captions: #94a3b8;
+  --tw-prose-code: #e2e8f0;
+  --tw-prose-pre-code: #e2e8f0;
+  --tw-prose-pre-bg: #1e293b;
+  --tw-prose-th-borders: #334155;
+  --tw-prose-td-borders: #1e293b;
 }
 
-.prose h2 {
-  scroll-margin-top: 5rem;
+/* Smooth theme transitions */
+html {
+  color-scheme: light;
 }
 
+html.dark {
+  color-scheme: dark;
+}
+
+body, .bg-white, .bg-surface, .bg-surface-alt, .border-border {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.prose h2,
 .prose h3 {
   scroll-margin-top: 5rem;
+}
+
+/* Better focus ring in dark mode */
+.dark *:focus-visible {
+  outline-color: #22c55e;
+}
+
+/* Native form element dark mode */
+.dark select option {
+  background: #111827;
+  color: #f1f5f9;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b;
+}
+
+/* Scrollbar dark mode */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #0b1120;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 5px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
